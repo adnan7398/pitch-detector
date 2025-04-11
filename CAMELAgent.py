@@ -8,6 +8,10 @@ from langchain.schema import (
 )
 import backoff
 import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Configure the Gemini model
 genai.configure(api_key=os.getenv('GOOGLE_API_KEY'))

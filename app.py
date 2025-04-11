@@ -23,19 +23,14 @@ import fitz  # PyMuPDF
 import io
 
 
-api_key = os.environ.get('GOOGLE_API_KEY', 'AIzaSyB-5eHo38zN9BdYIY1AwyEJLubYCzpYgNc')
+# Configure Gemini
+api_key = os.getenv('GOOGLE_API_KEY')
+if not api_key:
+    st.error("❌ Google API key not found. Please check your .env file.")
+    st.stop()
+
 genai.configure(api_key=api_key)
-
-
-model = genai.GenerativeModel(
-    model_name='gemini-1.0-pro',
-    generation_config=genai.types.GenerationConfig(
-        temperature=0.7,
-        top_p=0.8,
-        top_k=40,
-        max_output_tokens=1024,
-    )
-)
+model = genai.GenerativeModel('gemini-2.0-flash')
 
 # Set page config
 st.set_page_config(

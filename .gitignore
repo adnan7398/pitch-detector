@@ -161,6 +161,8 @@ cython_debug/
 
 # Environment variables
 .env
+.env.*
+!.env.example
 
 # Python
 __pycache__/
@@ -202,3 +204,25 @@ ENV/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Streamlit
+.streamlit/
+
+# Secrets
+secrets.toml
+*.toml
+
+# Logs
+*.log
+logs/
+
+# Cache
+.cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
