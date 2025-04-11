@@ -1,0 +1,10 @@
+openai
+streamlit
+pandas
+langchain
+langchain-community
+langchain-openai
+unstructured
+Pillow
+google-generativeai
+backoff
