@@ -207,8 +207,7 @@ Thumbs.db
 
 # Streamlit
 .streamlit/
-
-# Secrets
+.streamlit/secrets.toml
 secrets.toml
 *.toml
 
