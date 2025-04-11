@@ -7,11 +7,16 @@ from langchain.schema import (
     BaseMessage,
 )
 import backoff
+import os
+
+# Configure the Gemini model
+genai.configure(api_key=os.getenv('GOOGLE_API_KEY'))
+model = genai.GenerativeModel('gemini-2.0-flash')
 
 class PitchAnalyzer:
     def __init__(
         self,
-        model: genai.GenerativeModel,
+        model: genai.GenerativeModel = model,
     ) -> None:
         self.model = model
         self.analysis_categories = {
@@ -65,7 +70,7 @@ class CAMELAgent:
     def __init__(
         self,
         system_message: SystemMessage,
-        model: genai.GenerativeModel,
+        model: genai.GenerativeModel = model,
     ) -> None:
         self.system_message = system_message
         self.model = model
@@ -98,6 +103,7 @@ class CAMELAgent:
                     formatted_messages.append({"role": "user", "content": msg.content})
                 elif isinstance(msg, AIMessage):
                     formatted_messages.append({"role": "model", "content": msg.content})
+            
             response = self.model.generate_content(
                 contents=[msg["content"] for msg in formatted_messages],
                 generation_config=genai.types.GenerationConfig(
@@ -108,7 +114,6 @@ class CAMELAgent:
                 )
             )
             
-            # Convert Gemini response to AIMessage
             output_message = AIMessage(content=response.text)
             self.update_messages(output_message)
             return output_message
