@@ -1,6 +1,7 @@
 import streamlit as st
 import google.generativeai as genai
 import os
+from dotenv import load_dotenv
 from streamlit.components.v1 import html
 from langchain_community.document_loaders import PyPDFLoader
 from typing import List
@@ -22,8 +23,15 @@ import tempfile
 import fitz  # PyMuPDF
 import io
 
+# Load environment variables
+load_dotenv()
+
 # Configure Gemini
-api_key = os.environ.get('GOOGLE_API_KEY', 'AIzaSyB-5eHo38zN9BdYIY1AwyEJLubYCzpYgNc')
+api_key = os.getenv('GOOGLE_API_KEY')
+if not api_key:
+    st.error("❌ Google API key not found. Please check your .env file.")
+    st.stop()
+
 genai.configure(api_key=api_key)
 
 # Initialize Gemini model with correct model name
@@ -199,7 +207,16 @@ st.markdown("""
 
 # Theme toggle button
 st.markdown("""
-    <div class="theme-switch">
+    <div class="theme-switch" style="
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+        background-color: var(--card-bg);
+        padding: 10px;
+        border-radius: 50%;
+        box-shadow: 0 2px 4px var(--shadow-color);
+    ">
         <button onclick="toggleTheme()" style="
             background-color: var(--primary-color);
             color: white;
@@ -209,7 +226,10 @@ st.markdown("""
             height: 40px;
             font-size: 20px;
             cursor: pointer;
-            box-shadow: 0 2px 4px var(--shadow-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
         ">🌓</button>
     </div>
     
@@ -220,11 +240,21 @@ st.markdown("""
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
         html.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
+        
+        // Update button emoji
+        const button = document.querySelector('.theme-switch button');
+        button.textContent = newTheme === 'dark' ? '☀️' : '🌙';
     }
     
     // Check for saved theme preference
     const savedTheme = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
+    
+    // Set initial button emoji
+    document.addEventListener('DOMContentLoaded', function() {
+        const button = document.querySelector('.theme-switch button');
+        button.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+    });
     </script>
 """, unsafe_allow_html=True)
 
